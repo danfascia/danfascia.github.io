@@ -1,5 +1,5 @@
 ---
-name: Daniel Fascia
+title: Daniel Fascia
 ---
 ## Welcome to GitHub Pages
 
