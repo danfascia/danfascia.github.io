@@ -1,4 +1,12 @@
+---
+title: Daniel Fascia
+timezone: UTC
+collections:
+  posts:
+    title: Posts
+    output: true
+  uploads:
+    title: Uploads
+    output: true
 theme: jekyll-theme-cayman
-
-title: "Daniel Fascia"
-description: "Some thoughts for you..."
+description: Some thoughts for you...
