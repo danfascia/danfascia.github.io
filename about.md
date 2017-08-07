@@ -1,8 +1,7 @@
 ---
 title: About
-date: 2017-08-05T19:37:57.000Z
+date: 2017-08-05 19:37:57 Z
 layout: default
-published: true
 ---
 
 This is a page all about me, where you can learn how awesome I am and many more things like that.
