@@ -1,9 +1,8 @@
 ---
 title: FAQ
-date: 2017-08-07 17:57:03 +00:00
+date: 2017-08-07 17:57:03 Z
 featured_image: ''
 ---
-
 
 #Frequently Asked Questions (FAQ)
 
