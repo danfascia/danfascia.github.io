@@ -2,8 +2,9 @@
 ---
 
 body {
-  background-color: #ededed;
+  background-color: #fafafa;
   
+  font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
   font-size: 17px;
   line-height: 1.66em;
   
@@ -13,6 +14,10 @@ body {
   
   color: #333;
   }
+  
+.container {
+	max-width: 1000px;
+}
 
 a {
   color: blue;
@@ -34,6 +39,8 @@ header {
  	font-weight: normal;
     color: #999;
  }
+ 
+.site-branding { float:left; }
 
 .site-navigation {
 	display: block;
@@ -42,6 +49,7 @@ header {
 .site-navigation a { 
 	color: black;
     font-weight: bold;
+    margin-right: 1em;
 }
 
 article h1 {
@@ -51,6 +59,6 @@ article h1 {
 
 @media screen and (min-width: 49.5em) {
 	body {
-    	font-size: 2em;
+    	font-size: 1.5em;
     }
 }
