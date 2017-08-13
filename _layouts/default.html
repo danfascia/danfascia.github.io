@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700" rel="stylesheet">
-    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">  
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append:site.github.build_revision | relative_url }}">  
   
   </head>
   <body>
+   <div style="container">
     <header>
       <div class="site-branding">
         <h1 class="site-title">{{ site.title }}</h1>
@@ -31,6 +32,8 @@
         <span class="site-footer-credits">DF 2017</span>
       </footer>
     </section>
+     
+   
 
     {% if site.google_analytics %}
       <script type="text/javascript">
@@ -43,5 +46,6 @@
         ga('send', 'pageview');
       </script>
     {% endif %}
+    
   </body>
 </html>
