@@ -17,6 +17,7 @@ body {
   
 .container {
 	max-width: 1000px;
+    margin: 0 auto;
 }
 
 a {
@@ -28,6 +29,7 @@ a:hover { text-decoration: underline; }
 header {
 	padding: 1em;
     padding-bottom: 2em;
+    display: block;
 }
 
 .site-title {
