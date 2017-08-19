@@ -1,8 +1,6 @@
 ---
 title: About
-date: {}
 layout: default
-published: true
 ---
 
 This is a page all about me, where you can learn how awesome I am and many more things like that.
