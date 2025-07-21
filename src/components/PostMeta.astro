@@ -1,0 +1,17 @@
+---
+import { formatDate } from "@lib/utils";
+
+const { datetime, tags } = Astro.props;
+
+// Handle date conversion - datetime could be a Date object or string
+const dateString = datetime instanceof Date ? datetime.toISOString() : datetime;
+---
+<div class="inline-flex items-center gap-2 opacity-75">
+    <time datetime={dateString} class="font-mono text-sm font-semibold">{formatDate(dateString)}</time>
+    &middot;
+    <nav class="inline-flex items-center text-sm font-semibold">
+        {tags.map((tag: string) => (
+            <a class="px-1.5 bg-transparent hover:bg-black/25 dark:hover:bg-white/10 rounded-sm" href={`/tags/${tag.toLowerCase()}`}>#{tag.toLowerCase()}</a>
+        ))}
+    </nav>
+</div>

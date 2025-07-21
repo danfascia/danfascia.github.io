@@ -1,0 +1,46 @@
+---
+// Gallery component for displaying images in a responsive grid
+// Usage in MDX: <Gallery>![alt](src) ![alt2](src2)</Gallery>
+// Usage with props: <Gallery images={[{src: 'url', alt: 'description'}, ...]} />
+
+export interface Props {
+  images?: Array<{
+    src: string;
+    alt: string;
+  }>;
+}
+
+const { images } = Astro.props;
+---
+<div class="gallery grid grid-cols-1 sm:grid-cols-2 gap-4 my-8 not-prose">
+  {images ? (
+    images.map((image) => (
+      <figure>
+        <img class="w-full h-auto aspect-[3/2] object-cover rounded cursor-pointer" src={image.src} alt={image.alt} loading="lazy" />
+      </figure>
+    ))
+  ) : (
+    <slot />
+  )}
+</div>
+
+<style>
+  .gallery :global(p) {
+    margin: 0;
+    display: contents;
+  }
+  
+  .gallery :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    cursor: pointer;
+  }
+  
+  .gallery :global(img:hover) {
+    opacity: 0.9;
+    transition: opacity 0.2s ease-in-out;
+  }
+</style>

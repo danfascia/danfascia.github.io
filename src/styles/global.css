@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@variant dark (.dark &);
+
+@theme "default" {
+    --font-sans: 'Geist';
+    --font-mono: 'Geist Mono';
+    --color-carrara-50: hsl(46 33% 96%);
+    --color-carrara-100: hsl(46 33% 90%);
+    --color-carrara-200: hsl(65 26% 85%);
+    --color-carrara-300: hsl(84 22% 71%);
+    --color-carrara-400: hsl(103 21% 60%);
+    --color-carrara-500: hsl(122 20% 50%);
+    --color-carrara-600: hsl(141 19% 40%);
+    --color-carrara-700: hsl(160 18% 30%);
+    --color-carrara-800: hsl(179 17% 20%);
+    --color-carrara-900: hsl(190 16% 15%);
+    --color-carrara-950: hsl(200 15% 10%);
+}
+
+/* Custom typography styles for first paragraph */
+@layer base {
+  .prose p:first-of-type {
+    @apply text-lg/relaxed font-medium;
+  }
+}

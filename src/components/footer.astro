@@ -1,0 +1,14 @@
+---
+import { getCollection } from "astro:content";
+
+const pages = await getCollection("pages");
+---
+<footer class="mt-16 border-t pt-10">
+    <nav class="flex flex-col gap-2 font-semibold font-mono text-sm">
+        <a class="opacity-65 hover:opacity-100 hover:underline transition-all" href="/">Home</a>
+        <a class="opacity-65 hover:opacity-100 hover:underline transition-all" href="/tags">All Topics</a>
+        {pages.map((page) => (
+            <a class="opacity-65 hover:opacity-100 hover:underline transition-all" href={`/${page.slug}`}>{page.data.title}</a>
+        ))}
+    </nav>
+</footer>

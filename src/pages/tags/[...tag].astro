@@ -1,0 +1,45 @@
+---
+import Layout from "@components/layout.astro";
+import { getCollection } from "astro:content";
+import Header from "@components/header.astro";
+import PostListItem from "@components/PostListItem.astro";
+import { CircleX } from "@lucide/astro";
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts");
+  
+  // Get all unique tags from all posts, normalized to lowercase
+  const allTags = [...new Set(allPosts.flatMap(post => 
+    (post.data.tags || []).map(tag => tag.toLowerCase())
+  ))];
+  
+  return allTags.map(tag => ({
+    params: { tag },
+    props: { tag }
+  }));
+}
+
+const { tag } = Astro.props;
+const posts = await getCollection("posts", (post) => 
+  post.data.tags?.some(postTag => postTag.toLowerCase() === tag.toLowerCase())
+);
+---
+
+<Layout title={`Posts tagged with ${tag}`}>
+    <Header />
+
+	<main class="mx-auto mt-12 space-y-4">
+    
+    <nav class="flex items-center gap-2">
+      <h1><span class="hidden">Posts tagged with topic </span> <span class="inline-flex items-center font-semibold font-mono px-3 py-1 rounded-full border-2">#{tag}</span></h1>
+    <a class="inline-flex opacity-75 hover:opacity-100 transition-all duration-300 items-center gap-2 font-semibold font-mono px-3 py-1 rounded-full border-2" href="/tags"><CircleX class="size-5" />Clear</a>
+    </nav>
+
+    <div class="mt-12 space-y-12">
+      {posts.map((post) => (
+        <PostListItem frontmatter={post.data} href={`/post/${post.slug}`} />
+      ))}
+    </div>
+	</main>
+	
+</Layout>

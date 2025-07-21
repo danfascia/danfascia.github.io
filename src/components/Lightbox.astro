@@ -1,0 +1,145 @@
+---
+// Lightbox component for image galleries
+---
+
+<div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm">
+  <!-- Close button -->
+  <button id="lightbox-close" class="absolute top-4 right-4 z-10 p-2 text-white/70 hover:text-white transition-colors">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+
+  <!-- Image container -->
+  <div class="flex flex-col items-center justify-center w-full h-full p-4 relative">
+    <div class="relative group">
+      <img id="lightbox-image" src="" alt="" class="max-w-full max-h-full object-contain">
+      
+      <!-- Previous navigation area -->
+      <button id="lightbox-prev" class="cursor-pointer absolute left-0 top-0 w-1/2 h-full z-10 flex items-center justify-start pl-4 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:bg-black/10 transition-all duration-200 focus:outline-none group">
+        <svg class="w-12 h-12 text-white/60 group-hover:text-white group-hover:scale-110 group-hover:-translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+
+      <!-- Next navigation area -->
+      <button id="lightbox-next" class="cursor-pointer absolute right-0 top-0 w-1/2 h-full z-10 flex items-center justify-end pr-4 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:bg-black/10 transition-all duration-200 focus:outline-none group">
+        <svg class="w-12 h-12 text-white/60 group-hover:text-white group-hover:scale-110 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Image caption -->
+    <div id="lightbox-caption" class="mt-4 text-white/80 text-sm font-mono text-center max-w-2xl px-4 hidden"></div>
+  </div>
+
+  <!-- Image counter -->
+  <div id="lightbox-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm font-mono hidden">
+    <span id="current-image">1</span> / <span id="total-images">1</span>
+  </div>
+</div>
+
+<script>
+  class Lightbox {
+    private readonly lightbox = document.getElementById('lightbox')!;
+    private readonly lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
+    private images: HTMLImageElement[] = [];
+    private currentIndex = 0;
+    private startX = 0;
+    private startY = 0;
+
+    constructor() {
+      this.images = Array.from(document.querySelectorAll('main img'));
+      if (!this.images.length) return;
+
+      this.images.forEach((img, i) => {
+        img.style.cursor = 'pointer';
+        img.onclick = () => this.open(i);
+      });
+
+      this.setupEvents();
+    }
+
+    private setupEvents() {
+      const [close, prev, next] = ['lightbox-close', 'lightbox-prev', 'lightbox-next']
+        .map(id => document.getElementById(id)!);
+
+      close.onclick = () => this.close();
+      prev.onclick = () => this.navigate(-1);
+      next.onclick = () => this.navigate(1);
+
+      this.lightbox.onclick = (e) => {
+        const target = e.target as HTMLElement;
+        const isBackdrop = [this.lightbox, 'lightbox-image', 'lightbox-caption']
+          .includes(target) || target.classList.contains('flex');
+        if (isBackdrop && !target.closest('#lightbox-prev, #lightbox-next')) {
+          this.close();
+        }
+      };
+
+      document.onkeydown = (e) => {
+        if (!this.isOpen()) return;
+        const actions: Record<string, () => void> = {
+          Escape: () => this.close(),
+          ArrowLeft: () => this.navigate(-1),
+          ArrowRight: () => this.navigate(1)
+        };
+        actions[e.key]?.();
+      };
+
+      let startX = 0, startY = 0;
+      this.lightboxImage.ontouchstart = (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      };
+
+      this.lightboxImage.ontouchend = (e) => {
+        const diffX = startX - e.changedTouches[0].clientX;
+        const diffY = startY - e.changedTouches[0].clientY;
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+          this.navigate(diffX > 0 ? 1 : -1);
+        }
+      };
+    }
+
+    private open(index: number) {
+      this.currentIndex = index;
+      this.updateDisplay();
+      this.lightbox.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    private close() {
+      this.lightbox.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    private navigate(direction: number) {
+      if (this.images.length <= 1) return;
+      this.currentIndex = (this.currentIndex + direction + this.images.length) % this.images.length;
+      this.updateDisplay();
+    }
+
+    private updateDisplay() {
+      const img = this.images[this.currentIndex];
+      Object.assign(this.lightboxImage, { src: img.src, alt: img.alt });
+      
+      const caption = document.getElementById('lightbox-caption')!;
+      caption.textContent = img.alt?.trim() || '';
+      caption.classList.toggle('hidden', !img.alt?.trim());
+      
+      if (this.images.length > 1) {
+        document.getElementById('current-image')!.textContent = String(this.currentIndex + 1);
+        document.getElementById('total-images')!.textContent = String(this.images.length);
+        document.getElementById('lightbox-counter')!.classList.remove('hidden');
+      }
+    }
+
+    private isOpen() {
+      return !this.lightbox.classList.contains('hidden');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => new Lightbox());
+</script>

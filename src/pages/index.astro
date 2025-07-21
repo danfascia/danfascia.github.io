@@ -1,0 +1,27 @@
+---
+import Layout from "@components/layout.astro";
+import Header from "@components/header.astro";
+import PostListItem from "@components/PostListItem.astro";
+import { getCollection } from "astro:content";
+import Pagination from "@components/Pagination.astro";
+
+const pageSize = 15
+
+const allPosts = await getCollection("posts");
+allPosts.sort((a, b) => new Date(b.data.published ?? '').getTime() - new Date(a.data.published ?? '').getTime());
+
+const posts = allPosts.slice(0, pageSize);
+const totalPages = Math.ceil(allPosts.length / pageSize);
+---
+<Layout title="Latest posts">
+
+	<Header show={["pages", "socials"]} />
+
+	<main class="mx-auto mt-12 space-y-12">
+		{posts.map((post) => (
+			<PostListItem frontmatter={post.data} href={`/post/${post.slug}`} />
+		))}
+
+		<Pagination currentPage={1} totalPages={totalPages} basePath="/posts" />
+	</main>
+</Layout>

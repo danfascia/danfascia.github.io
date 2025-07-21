@@ -1,0 +1,17 @@
+---
+import { generateExcerpt } from '@lib/utils';
+import PostMeta from './PostMeta.astro';
+
+const { frontmatter, href, excerptLength = 200 } = Astro.props;
+---
+<article class="space-y-1 transition-all duration-300">
+
+    <PostMeta datetime={frontmatter.published} tags={frontmatter.tags} />
+    
+    <a class="group" href={href}>
+        <h2 class="font-bold text-xl md:text-2xl group-hover:underline">{frontmatter.title}</h2>
+        <p class="mt-3">
+        {generateExcerpt(frontmatter.description, excerptLength)}
+        </p>
+    </a>
+</article>

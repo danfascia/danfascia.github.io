@@ -1,0 +1,65 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+}
+
+const { currentPage, totalPages, basePath } = Astro.props;
+
+const maxPagesToShow = 10;
+const pagesAroundCurrent = 2;
+const firstPagesCount = 3;
+const lastPagesCount = 3;
+
+let pagesToShow: number[] = [];
+
+if (totalPages <= maxPagesToShow) {
+  pagesToShow = Array.from({ length: totalPages }, (_, i) => i + 1);
+} else if (totalPages > maxPagesToShow) {
+  // Show first 5 pages, then ellipsis, then last page
+  for (let i = 1; i <= 5; i++) {
+    pagesToShow.push(i);
+  }
+  pagesToShow.push(-1); // Ellipsis
+  pagesToShow.push(totalPages);
+}
+
+const getPageUrl = (page: number) => {
+  if (page === 1) {
+    return basePath === "/" ? "/" : `${basePath}`;
+  } else {
+    return `${basePath}/${page}`;
+  }
+};
+---
+
+{totalPages > 1 && (
+  <nav class="flex items-center justify-center text-sm font-mono font-semibold space-x-2 mt-8">
+    {currentPage === 1 ? (
+      <span class="px-4 py-2 opacity-35">Previous</span>
+    ) : (
+      <a href={getPageUrl(currentPage - 1)} class="px-3 py-1.5 bg-black/10 dark:bg-white/10 text-black dark:text-white rounded hover:bg-black/25 dark:hover:bg-white/25">Previous</a>
+    )}
+    {pagesToShow.map((p) => (
+      p === -1 ? (
+        <span class="px-3 py-1.5 rounded opacity-50">...</span>
+      ) : (
+      <a
+        href={getPageUrl(p)}
+        class={`px-3 py-1.5 rounded ${p === currentPage ? "bg-black/70 dark:bg-white/70 text-white dark:text-black" : "bg-black/10 dark:bg-white/10 text-black dark:text-white hover:bg-black/25 dark:hover:bg-white/25"}`}
+      >
+        {p}
+      </a>
+      )
+    ))}
+
+
+    
+    {currentPage === totalPages ? (
+      <span class="px-4 py-2 opacity-35">Next</span>
+    ) : (
+      <a href={getPageUrl(currentPage + 1)} class="px-3 py-1.5 bg-black/10 dark:bg-white/10 text-black dark:text-white rounded hover:bg-black/25 dark:hover:bg-white/25">Next</a>
+    )}
+  </nav>
+)}

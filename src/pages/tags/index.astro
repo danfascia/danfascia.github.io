@@ -1,0 +1,60 @@
+---
+import Layout from "@components/layout.astro";
+import Header from "@components/header.astro";
+import { getCollection } from "astro:content";
+
+// Get all posts and calculate tag counts
+const allPosts = await getCollection("posts");
+
+// Create a map to count posts per tag (case-insensitive)
+const tagCounts = new Map<string, { displayName: string; count: number }>();
+
+allPosts.forEach(post => {
+  post.data.tags?.forEach(tag => {
+    const lowerTag = tag.toLowerCase();
+    if (tagCounts.has(lowerTag)) {
+      tagCounts.get(lowerTag)!.count++;
+    } else {
+      tagCounts.set(lowerTag, { displayName: tag, count: 1 });
+    }
+  });
+});
+
+// Convert to array and sort by count (descending) then by name
+const sortedTags = Array.from(tagCounts.entries())
+  .map(([key, value]) => ({ key, ...value }))
+  .sort((a, b) => {
+    if (b.count !== a.count) return b.count - a.count;
+    return a.displayName.localeCompare(b.displayName);
+  });
+---
+
+<Layout title="Tags">
+    <Header show={["pages", "socials"]} />
+
+    <main class="mx-auto mt-12 space-y-6">
+        <h1 class="font-bold text-2xl lg:text-3xl">All Topics</h1>
+        
+        {sortedTags.length > 0 ? (
+          <div class="overflow-hidden">
+            <div class="divide-y divide-black/10 dark:divide-white/10">
+              {sortedTags.map(({ key, displayName, count }) => (
+                <a 
+                  href={`/tags/${key}`} 
+                  class="flex items-center justify-between px-3 py-4 hover:bg-black/10 dark:hover:bg-white/10 transition-colors duration-200 group"
+                >
+                  <span class="font-mono font-medium text-sm transition-colors duration-200">
+                    #{displayName}
+                  </span>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-black/10 dark:bg-white/10 opacity-65 font-semibold  transition-colors duration-200">
+                    {count} {count === 1 ? 'article' : 'articles'}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p class="text-gray-600">No tags found.</p>
+        )}
+    </main>
+</Layout>

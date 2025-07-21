@@ -1,0 +1,60 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../components/layout.astro';
+import Header from '../../components/header.astro';
+import PostMeta from '../../components/PostMeta.astro';
+import Footer from '../../components/footer.astro';
+import Lightbox from '../../components/Lightbox.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }: CollectionEntry<'posts'>) => {
+    return data.draft !== true;
+  });
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+
+type Props = CollectionEntry<'posts'>;
+
+const post = Astro.props as Props;
+const { Content } = await post.render();
+const { data: frontmatter } = post;
+const {
+	title,
+	description,
+	keywords,
+	author,
+	image,
+	published,
+	modified,
+	tags
+} = frontmatter;
+const type = "article";
+---
+
+<Layout 
+	title={title}
+	description={description}
+	keywords={keywords}
+	author={author}
+	image={image}
+	type={type}
+	publishedTime={published?.toISOString()}
+	modifiedTime={modified?.toISOString()}
+	tags={tags}
+>
+	<Header show={["socials"]} />
+	<main class="prose dark:prose-invert max-w-full mx-auto pt-16 px-5">
+		<h1 class="mb-2">{title}</h1>
+		{published && (
+			<div class="not-prose mb-10">
+				<PostMeta datetime={published} tags={tags} />
+			</div>
+		)}
+		<Content />
+	</main>
+	<Footer />
+	<Lightbox />
+</Layout>
