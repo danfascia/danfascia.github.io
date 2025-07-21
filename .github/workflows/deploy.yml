@@ -25,6 +25,8 @@ jobs:
 
       - name: Copy content folders
         run: |
+          rm -rf src/content/posts
+          rm -rf src/content/pages
           mkdir -p src/content/posts
           mkdir -p src/content/pages
           cp -r _temp_blog_content/posts/* src/content/posts/
