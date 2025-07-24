@@ -1,0 +1,11 @@
+# Dr Daniel Fascia: Musculoskeletal Radiologist, AI, Healthtech startup expert
+    
+# About me
+
+I am Dr Dan Fascia, an MSK Radiologist in Harrogate, Yorkshire, UK. I am also a keen AI enthusiast and have a passion for using AI to improve healthcare.
+    
+## Posts
+    
+[Welcome to My Blog](https://www.danielfascia.com/post/astro-obsidian-blog-workflow.md)
+
+[Arch Linux, Beelinks and Framework laptops](https://www.danielfascia.com/post/arch-linux-beelinks-frameworks.md)
